@@ -31,7 +31,8 @@
                                    :node/components [{:component/type :DOMElement
                                                       :fontSize       "30px"
                                                       :lineHeight     "100px"
-                                                      :content        "Twitter"}]
+                                                      :content        "Twitter"}
+                                                     ]
                                    }
                                   {:node/id "footer"
                                    :node/size-mode [DEFAULT ABSOLUTE]
@@ -42,14 +43,14 @@
                                                             :let [{:keys [id tweet-number]}  (sections i)]]
                                                     {:node/id id
                                                      :node/align [(/ i num-sections)]
-                                                     :node/proportional-size (/ 1 num-sections)
+                                                     :node/proportional-size [(/ 1 num-sections)]
                                                      :node/components [{:component/type :DOMElement
                                                                         :textAlign "center"
                                                                         :lineHeight "100px"
                                                                         :fontSize "18px"
                                                                         :cursor "pointer"
-                                                                        :classes ["navigation"]
-                                                                        :content id}] }))
+                                                                        :classes ["navigation"]}]
+                                                     }))
                                    }
                                   {:node/id "swapper"}
                                   ] })

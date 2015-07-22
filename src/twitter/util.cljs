@@ -77,13 +77,16 @@
     (if (keyword? component-type)
       (let [component-constructor (famous-components component-type)
             component (component-constructor. famous-node)
-            properties (dissoc component-descriptor :component/type)]
+            properties (dissoc component-descriptor :component/type :db/id)]
         (doseq [p properties
                 :let [name (name (first p))
                       value (second p)]]
-          (if (= name "content")
-            (.. component (setContent value))
-            (.. component (setProperty name value))))
+          (cond
+            (= name "content") (.. component (setContent value))
+            (= name "classes") (doseq [clz value]
+                                 (.. component (addClass clz)))
+            :else (do
+                    (.. component (setProperty name value)))))
         component)
       (let [component (clj->js component-descriptor)]
         (.. famous-node (addComponent component))
@@ -108,8 +111,7 @@
     (.apply (.-setPosition famous-node) famous-node position)
     (.apply (.-setMountPoint famous-node) famous-node mount-point)
     (.apply (.-setOrigin famous-node) famous-node origin)
-    (println "ps="  proportional-size)
-    (.apply (.-setProportionalSize famous-node) famous-node porportional-size)
+    (.apply (.-setProportionalSize famous-node) famous-node proportional-size)
 
     (doseq [child-node (:node/children node)
             :let [a-child-node (attach-famous-node-to-scene-graph child-node)
