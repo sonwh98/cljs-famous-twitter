@@ -104,7 +104,9 @@
         position (clj->js (:node/position node))
         mount-point (clj->js (:node/mount-point node))
         origin (clj->js (:node/origin node))
-        proportional-size  (clj->js (:node/proportional-size node))]
+        proportional-size  (clj->js (:node/proportional-size node))
+        differential-size (clj->js (:node/differential-size node))
+        ]
     (.apply (.-setSizeMode famous-node) famous-node size-mode)
     (.apply (.-setAbsoluteSize famous-node) famous-node absolute-size)
     (.apply (.-setAlign famous-node) famous-node align)
@@ -112,6 +114,7 @@
     (.apply (.-setMountPoint famous-node) famous-node mount-point)
     (.apply (.-setOrigin famous-node) famous-node origin)
     (.apply (.-setProportionalSize famous-node) famous-node proportional-size)
+    (.apply (.-setDifferentialSize famous-node) famous-node differential-size)
 
     (doseq [child-node (:node/children node)
             :let [a-child-node (attach-famous-node-to-scene-graph child-node)

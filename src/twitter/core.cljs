@@ -52,7 +52,8 @@
                                                                         :classes ["navigation"]}]
                                                      }))
                                    }
-                                  {:node/id "swapper"}
+                                  {:node/id "swapper"
+                                   :node/differential-size [nil -200 nil] }
                                   ] })
 
 (util/save scene-graph)
