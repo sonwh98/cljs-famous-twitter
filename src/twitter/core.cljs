@@ -22,6 +22,7 @@
 
 (def sections [{:id "Home" :tweet-number 50}
                {:id "Discover" :tweet-number 50}
+               {:id "Connect" :tweet-number 50}
                {:id "Me" :tweet-number 25}])
 
 (def scene-graph {:node/id "twitterus"
@@ -34,27 +35,33 @@
                                                       :content        "Twitter"}
                                                      ]
                                    }
+                                  
+                                  {:node/id "swapper"
+                                   :node/differential-size [nil -200 nil]
+                                   :node/position [0 100]
+                                   :node/components [{:component/type :DOMElement}]
+                                   :node/children []}
                                   {:node/id "footer"
                                    :node/size-mode [DEFAULT ABSOLUTE]
                                    :node/absolute-size [nil 100]
                                    :node/align [0 1]
                                    :node/children (let [num-sections (count sections)]
                                                     (for [ i (range num-sections)
-                                                            :let [{:keys [id tweet-number]}  (sections i)]]
-                                                    {:node/id id
-                                                     :node/align [(/ i num-sections)]
-                                                     :node/proportional-size [(/ 1 num-sections)]
-                                                     :node/components [{:component/type :DOMElement
-                                                                        :textAlign "center"
-                                                                        :lineHeight "100px"
-                                                                        :fontSize "18px"
-                                                                        :cursor "pointer"
-                                                                        :classes ["navigation"]}]
-                                                     }))
+                                                          :let [{:keys [id tweet-number]}  (sections i)]]
+                                                      {:node/id id
+                                                       :node/align [(/ i num-sections)]
+                                                       :node/proportional-size [(/ 1 num-sections)]
+                                                       :node/components [{:component/type :DOMElement
+                                                                          :textAlign "center"
+                                                                          :lineHeight "100px"
+                                                                          :fontSize "18px"
+                                                                          :cursor "pointer"
+                                                                          :classes ["navigation"]}]
+                                                       }))
                                    }
-                                  {:node/id "swapper"
-                                   :node/differential-size [nil -200 nil] }
-                                  ] })
+                                  ]
+                  }
+  )
 
 (util/save scene-graph)
 
