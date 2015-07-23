@@ -32,6 +32,7 @@
                                    :node/components [{:component/type :DOMElement
                                                       :fontSize       "30px"
                                                       :lineHeight     "100px"
+                                                      :background "red"
                                                       :content        "Twitter"}
                                                      ]
                                    }
@@ -39,12 +40,18 @@
                                   {:node/id "swapper"
                                    :node/differential-size [nil -200 nil]
                                    :node/position [0 100]
-                                   :node/components [{:component/type :DOMElement}]
+                                   :node/components [{:component/type :DOMElement
+                                                      :background "blue"
+                                                      :content "Swapper"}]
                                    :node/children []}
                                   {:node/id "footer"
                                    :node/size-mode [DEFAULT ABSOLUTE]
                                    :node/absolute-size [nil 100]
                                    :node/align [0 1]
+                                   :node/mount-point [0 1]
+                                   :node/components [{:component/type :DOMElement
+                                                      :content "Footer"
+                                                      :background "green"}]
                                    :node/children (let [num-sections (count sections)]
                                                     (for [ i (range num-sections)
                                                           :let [{:keys [id tweet-number]}  (sections i)]]
@@ -55,13 +62,7 @@
                                                                           :textAlign "center"
                                                                           :lineHeight "100px"
                                                                           :fontSize "18px"
-                                                                          :cursor "pointer"
-                                                                          :classes ["navigation"]}]
-                                                       }))
-                                   }
-                                  ]
-                  }
-  )
+                                                                          :cursor "pointer"}]}))}]})
 
 (util/save scene-graph)
 
