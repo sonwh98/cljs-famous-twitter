@@ -44,12 +44,12 @@
                                                               :node/components [{:component/type :DOMElement
                                                                                  :overflow-y     "scroll"
                                                                                  :overflow-x     "hidden"}]
-                                                              :node/children   (for [i (range 10)]
+                                                              :node/children   (for [i (range 25)]
                                                                                  {:node/size-mode       [DEFAULT ABSOLUTE]
                                                                                   :node/absolute-size   [nil 100]
                                                                                   :node/position        [0 (* 100 i)]
                                                                                   :node/components [{:component/type :DOMElement
-                                                                                                     :backgroundColor (.toString (rand-int 16rFFFFFF) 16)
+                                                                                                     :backgroundColor (str "#" (.toString (rand-int 16rFFFFFF) 16))
                                                                                                      :boxingSize "border-box"
                                                                                                      :lineHeight "100px"
                                                                                                      :borderBottom "1px solid black"
@@ -62,8 +62,7 @@
                                    :node/align         [0 1]
                                    :node/mount-point   [0 1]
                                    :node/components    [{:component/type :DOMElement
-                                                         :content        "Footer"
-                                                         :background     "green"}]
+                                                         }]
                                    :node/children      (let [num-sections (count sections)]
                                                          (for [i (range num-sections)
                                                                :let [{:keys [id tweet-number]} (sections i)]]
@@ -75,7 +74,6 @@
                                                                                       :lineHeight      "100px"
                                                                                       :fontSize        "18px"
                                                                                       :cursor          "pointer"
-                                                                                      :backgroundColor "green"
                                                                                       :content         id}]}))}]})
 
 (util/save scene-graph)
