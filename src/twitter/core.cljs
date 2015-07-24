@@ -85,13 +85,16 @@
           section-nodes (:node/children (get-node-by-id "footer"))
           off-section-nodes (filter #(not= % selected-section-node) section-nodes)
           famous-node (:node/famous-node selected-section-node)
+          align (.. famous-node getAlign)
           components (.. famous-node getComponents)]
 
       (doseq [c components]
         (if (= "DOMElement" (.. c -constructor -name))
           (.. c (removeClass "off") (addClass "on"))))
 
-      (doseq [{famous-node :node/famous-node} off-section-nodes]
+      (doseq [{famous-node :node/famous-node} off-section-nodes
+              :let [align (.. famous-node getAlign)]]
+        (println "align=" (.. align -constructor -name))
         (doseq [c (.. famous-node getComponents)]
           (if (= "DOMElement" (.. c -constructor -name))
             (.. c (removeClass "on") (addClass "off"))))))))
