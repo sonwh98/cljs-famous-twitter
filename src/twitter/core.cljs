@@ -38,16 +38,16 @@
                                   {:node/id                "swapper"
                                    :node/differential-size [nil -200 nil]
                                    :node/position          [0 100]
+                                   :node/components [{:component/type :DOMElement}]
                                    :node/children          (for [{:keys [id]} sections]
                                                              {:node/id         (str "section-" id)
                                                               :node/components [{:component/type :DOMElement
                                                                                  :overflow-y     "scroll"
                                                                                  :overflow-x     "hidden"}]
                                                               :node/children   (for [i (range 10)]
-                                                                                 {:node/id         (str "tweet" i)
-                                                                                  :size-mode       [DEFAULT ABSOLUTE]
-                                                                                  :absolute-size   [nil 100]
-                                                                                  :position        [0 (* 100 i)]
+                                                                                 {:node/size-mode       [DEFAULT ABSOLUTE]
+                                                                                  :node/absolute-size   [nil 100]
+                                                                                  :node/position        [0 (* 100 i)]
                                                                                   :node/components [{:component/type :DOMElement
                                                                                                      :backgroundColor (.toString (rand-int 16rFFFFFF) 16)
                                                                                                      :boxingSize "border-box"
