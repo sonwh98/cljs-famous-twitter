@@ -69,7 +69,7 @@
                 (:node/famous-node node)
                 node)]
      (.. (GestureHandler. node) (on event (fn []
-                                            (put! c (or (payload-function) event) )))))
+                                            (put! c (or (payload-function) event))))))
    c))
 
 (defn create-component [component-descriptor famous-node]
@@ -104,7 +104,7 @@
         position (clj->js (:node/position node))
         mount-point (clj->js (:node/mount-point node))
         origin (clj->js (:node/origin node))
-        proportional-size  (clj->js (:node/proportional-size node))
+        proportional-size (clj->js (:node/proportional-size node))
         differential-size (clj->js (:node/differential-size node))
         ]
     (.apply (.-setSizeMode famous-node) famous-node size-mode)
