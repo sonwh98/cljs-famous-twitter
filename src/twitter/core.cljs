@@ -9,13 +9,6 @@
 
 (defonce famous js/famous)
 (defonce Size (.. famous -components -Size))
-(defonce physics (.. famous -physics))
-(defonce math (.. famous -math))
-(defonce FamousBox (.. physics -Box))
-(defonce Spring (.. physics -Spring))
-(defonce RotationalSpring (.. physics -RotationalSpring))
-(defonce Quaternion (.. math -Quaternion))
-(defonce Vec3 (.. math -Vec3))
 
 (defonce ABSOLUTE (.. Size -ABSOLUTE))
 (defonce DEFAULT (.. Size -RELATIVE))
