@@ -66,7 +66,7 @@
                                    :node/children      (let [num-sections (count sections)]
                                                          (for [i (range num-sections)
                                                                :let [{:keys [id tweet-number]} (sections i)]]
-                                                           {:node/id                (str "footer" id)
+                                                           {:node/id                (str "footer-" id)
                                                             :node/align             [(/ i num-sections)]
                                                             :node/proportional-size [(/ 1 num-sections)]
                                                             :node/components        [{:component/type  :DOMElement
@@ -81,13 +81,13 @@
 
 (render-scene-graph "twitterus")
 
-(def channels (for [{:keys [id]} sections
-                    :let [section-node (get-node-by-id  (str "footer" id))]]
-                (events->chan section-node "tap" (fn [] (:node/famous-node section-node)))))
+(def channels (for [section-node (:node/children (get-node-by-id "footer"))]
+                (events->chan section-node "tap" (fn [] section-node))))
 
 (go
   (while true
-    (let [[famous-node channel] (alts! channels)
+    (let [[section-node channel] (alts! channels)
+          famous-node (:node/famous-node section-node)
           components (.. famous-node getComponents)]
       (doseq [c components]
         (if (= "DOMElement" (.. c -constructor -name))
