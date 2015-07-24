@@ -63,13 +63,13 @@
   "Given a node and event type return a channel of
   observed events. Can supply the channel to receive events as third
   optional argument."
-  ([node event] (events->chan node event (chan)))
-  ([node event c]
+  ([node event payload-function] (events->chan node event (chan) payload-function))
+  ([node event c payload-function]
    (let [node (if (map? node)
                 (:node/famous-node node)
                 node)]
      (.. (GestureHandler. node) (on event (fn []
-                                            (put! c event)))))
+                                            (put! c (or (payload-function) event) )))))
    c))
 
 (defn create-component [component-descriptor famous-node]

@@ -62,8 +62,19 @@
                                                                           :textAlign "center"
                                                                           :lineHeight "100px"
                                                                           :fontSize "18px"
-                                                                          :cursor "pointer"}]}))}]})
+                                                                          :cursor "pointer"
+                                                                          :backgroundColor "green"
+                                                                          :content id}]}))}]})
 
 (util/save scene-graph)
 
 (render-scene-graph "twitterus")
+
+(def channels (for [{:keys [id]} sections
+                    :let [section-node (get-node-by-id id)]]
+                (events->chan (get-node-by-id id) "tap" (fn [] id))))
+
+(go
+  (while true
+    (let [[v channel] (alts! channels)]
+      (println v))))
