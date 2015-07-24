@@ -74,6 +74,7 @@
                                                                                       :lineHeight      "100px"
                                                                                       :fontSize        "18px"
                                                                                       :cursor          "pointer"
+                                                                                      :classes         ["navigation"]
                                                                                       :content         id}]}))}]})
 
 (util/save scene-graph)
@@ -82,9 +83,14 @@
 
 (def channels (for [{:keys [id]} sections
                     :let [section-node (get-node-by-id  (str "footer" id))]]
-                (events->chan section-node "tap" (fn [] id))))
+                (events->chan section-node "tap" (fn [] (:node/famous-node section-node)))))
 
 (go
   (while true
-    (let [[v channel] (alts! channels)]
-      (println v))))
+    (let [[famous-node channel] (alts! channels)
+          components (.. famous-node getComponents)]
+      (doseq [c components]
+        (if (= "DOMElement" (.. c -constructor -name))
+          (do
+            (println c)
+            (.. c (removeClass "off") (addClass "on"))))))))
