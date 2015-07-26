@@ -80,38 +80,38 @@
 (def channels (for [section-button-node (:node/children (get-node-by-id "footer"))]
                 (events->chan section-button-node "tap" (fn [] section-button-node))))
 
-(defn switch-on [component]
-  (.. component (removeClass "off") (addClass "on")))
 
-(defn switch-off [component]
-  (.. component (removeClass "on") (addClass "off")))
+(defn get-famous-component [famous-node component-name]
+  (first (filter (fn [component]
+                   (let [cn (.. component -constructor -name)]
+                     (= component-name cn)))
+                 (.. famous-node getComponents))))
 
-(defn get-famous-component [component-name]
+(defn switch-on [id]
+  (let [section-button-nodes (:node/children (get-node-by-id "footer"))
+        selected-button-node (get-node-by-id id)
+        selected-button-famous-node (:node/famous-node selected-button-node)
+        domElement (get-famous-component selected-button-famous-node "DOMElement")
+        _ (.. domElement (removeClass "off") (addClass "on"))
 
-  )
+        selected-section-famous-node (:node/famous-node (get-node-by-id (str "section-" id)))
+        align-component (get-famous-component selected-section-famous-node "Align")
+        _ (.. align-component (set 0 0 0 (clj->js {:duration 500})))
+
+        off-nodes (filter #(not= % selected-button-node) section-button-nodes)]
+
+    (doseq [off-node off-nodes
+            :let [id (:node/id off-node)
+                  famous-node (:node/famous-node off-node)
+                  domElement (get-famous-component famous-node "DOMElement")
+                  off-section-famous-node (:node/famous-node (get-node-by-id (str "section-" id)))
+                  align-component (get-famous-component off-section-famous-node "Align")
+                  ]]
+      (.. domElement (removeClass "on") (addClass "off"))
+      (.. align-component (set 1 0 0 (clj->js {:duration 500}))))))
 
 (go
   (while true
     (let [[selected-button-node channel] (alts! channels)
-          section-button-nodes (:node/children (get-node-by-id "footer"))
-          id (:node/id selected-button-node)
-          selected-section-node (-> (get-node-by-id (str "section-" id)) :node/famous-node)
-          off-section-nodes (filter #(not= % selected-button-node) section-button-nodes)
-          famous-node (:node/famous-node selected-button-node)
-          components (.. famous-node getComponents)]
-      
-      (doseq [c (.. selected-section-node getComponents)
-              :let [component-name (.. c -constructor -name)]]
-        (if (= component-name "Align")
-          (.. c (set 1 0 0 (clj->js {:duration 500})))))
-
-      (doseq [c components
-              :let [component-name (.. c -constructor -name)]]
-        (if (= "DOMElement" component-name)
-          (switch-on c)))
-
-      (doseq [{famous-node :node/famous-node} off-section-nodes
-              :let [align (.. famous-node getAlign)]]
-        (doseq [c (.. famous-node getComponents)]
-          (if (= "DOMElement" (.. c -constructor -name))
-            (switch-off c)))))))
+          id (:node/id selected-button-node)]
+      (switch-on id))))
