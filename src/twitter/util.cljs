@@ -20,7 +20,8 @@
 (defonce Vec3 (.. math -Vec3))
 
 
-(defonce famous-components {:DOMElement (.. famous -domRenderables -DOMElement)})
+(defonce famous-components {:DOMElement (.. famous -domRenderables -DOMElement)
+                            :Align      (.. famous -components -Align)})
 
 (defn famous-compare [x y]
   "Compare famous javascript objects. See https://github.com/tonsky/datascript/issues/69"
