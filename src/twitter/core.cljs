@@ -78,7 +78,7 @@
 (render-scene-graph "twitterus")
 
 (def channels (for [section-button-node (:node/children (get-node-by-id "footer"))]
-                (events->chan section-button-node "tap" (fn [] section-button-node))))
+                (events->chan section-button-node "tap" (fn [] (:node/id section-button-node)))))
 
 
 (defn get-famous-component [famous-node component-name]
@@ -87,20 +87,28 @@
                      (= component-name cn)))
                  (.. famous-node getComponents))))
 
+(defn get-unselected-nodes [selected-button-node section-button-nodes]
+  (filter #(not= % selected-button-node) section-button-nodes)
+  )
+(defn show [dom-element align-component]
+  (.. dom-element (removeClass "off") (addClass "on"))
+  (.. align-component (set 0 0 0 (clj->js {:duration 1500})))
+  )
+
 (defn switch-on [id]
   (let [section-button-nodes (:node/children (get-node-by-id "footer"))
         selected-button-node (get-node-by-id id)
         selected-button-famous-node (:node/famous-node selected-button-node)
         domElement (get-famous-component selected-button-famous-node "DOMElement")
-        _ (.. domElement (removeClass "off") (addClass "on"))
 
         selected-section-famous-node (:node/famous-node (get-node-by-id (str "section-" id)))
         align-component (get-famous-component selected-section-famous-node "Align")
-        _ (.. align-component (set 0 0 0 (clj->js {:duration 500})))
 
-        off-nodes (filter #(not= % selected-button-node) section-button-nodes)]
+        unselected-nodes (get-unselected-nodes selected-button-node section-button-nodes)]
 
-    (doseq [off-node off-nodes
+    (show domElement align-component)
+
+    (doseq [off-node unselected-nodes
             :let [id (:node/id off-node)
                   famous-node (:node/famous-node off-node)
                   domElement (get-famous-component famous-node "DOMElement")
@@ -108,10 +116,9 @@
                   align-component (get-famous-component off-section-famous-node "Align")
                   ]]
       (.. domElement (removeClass "on") (addClass "off"))
-      (.. align-component (set 1 0 0 (clj->js {:duration 500}))))))
+      (.. align-component (set 1 0 0 (clj->js {:duration 1500}))))))
 
 (go
   (while true
-    (let [[selected-button-node channel] (alts! channels)
-          id (:node/id selected-button-node)]
+    (let [[id channel] (alts! channels)]
       (switch-on id))))
