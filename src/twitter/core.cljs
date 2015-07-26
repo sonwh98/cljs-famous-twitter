@@ -90,19 +90,20 @@
 (defn get-unselected-nodes [selected-button-node section-button-nodes]
   (filter #(not= % selected-button-node) section-button-nodes))
 
-(defn show [id]
+(defn get-dom-element-and-align-component [id]
   (let [footer-section-node (get-node-by-id id)
         section-node (get-node-by-id (str "section-" id))
         dom-element (get-famous-component (:node/famous-node footer-section-node) "DOMElement")
         align-component (get-famous-component (:node/famous-node section-node) "Align")]
+    [dom-element align-component]))
+
+(defn show [id]
+  (let [[dom-element align-component] (get-dom-element-and-align-component id)]
     (.. dom-element (removeClass "off") (addClass "on"))
     (.. align-component (set 0 0 0 (clj->js {:duration 1500})))))
 
 (defn hide [id]
-  (let [footer-section-node (get-node-by-id id)
-        section-node (get-node-by-id (str "section-" id))
-        dom-element (get-famous-component (:node/famous-node footer-section-node) "DOMElement")
-        align-component (get-famous-component (:node/famous-node section-node) "Align")]
+  (let [[dom-element align-component] (get-dom-element-and-align-component id)]
     (.. dom-element (removeClass "on") (addClass "off"))
     (.. align-component (set 1 0 0 (clj->js {:duration 1500})))))
 
@@ -110,7 +111,6 @@
   (let [section-button-nodes (:node/children (get-node-by-id "footer"))
         selected-button-node (get-node-by-id id)
         unselected-node-ids (map #(:node/id %) (get-unselected-nodes selected-button-node section-button-nodes))]
-
     (show id)
     (doseq [id unselected-node-ids]
       (hide id))
