@@ -88,12 +88,19 @@
                  (.. famous-node getComponents))))
 
 (defn get-unselected-nodes [selected-button-node section-button-nodes]
-  (filter #(not= % selected-button-node) section-button-nodes)
-  )
+  (filter #(not= % selected-button-node) section-button-nodes))
+
 (defn show [dom-element align-component]
   (.. dom-element (removeClass "off") (addClass "on"))
-  (.. align-component (set 0 0 0 (clj->js {:duration 1500})))
-  )
+  (.. align-component (set 0 0 0 (clj->js {:duration 1500}))))
+
+(defn hide [id]
+  (let [footer-section-node (get-node-by-id id)
+        section-node (get-node-by-id (str "section-" id))
+        dom-element (get-famous-component (:node/famous-node footer-section-node) "DOMElement")
+        align-component (get-famous-component (:node/famous-node section-node) "Align")]
+    (.. dom-element (removeClass "on") (addClass "off"))
+    (.. align-component (set 1 0 0 (clj->js {:duration 1500})))))
 
 (defn switch-on [id]
   (let [section-button-nodes (:node/children (get-node-by-id "footer"))
@@ -104,19 +111,14 @@
         selected-section-famous-node (:node/famous-node (get-node-by-id (str "section-" id)))
         align-component (get-famous-component selected-section-famous-node "Align")
 
-        unselected-nodes (get-unselected-nodes selected-button-node section-button-nodes)]
+        unselected-node-ids (map #(:node/id %) (get-unselected-nodes selected-button-node section-button-nodes))]
 
     (show domElement align-component)
+    (println unselected-node-ids)
 
-    (doseq [off-node unselected-nodes
-            :let [id (:node/id off-node)
-                  famous-node (:node/famous-node off-node)
-                  domElement (get-famous-component famous-node "DOMElement")
-                  off-section-famous-node (:node/famous-node (get-node-by-id (str "section-" id)))
-                  align-component (get-famous-component off-section-famous-node "Align")
-                  ]]
-      (.. domElement (removeClass "on") (addClass "off"))
-      (.. align-component (set 1 0 0 (clj->js {:duration 1500}))))))
+    (doseq [id unselected-node-ids]
+      (hide id))
+    ))
 
 (go
   (while true
