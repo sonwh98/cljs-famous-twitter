@@ -1,6 +1,6 @@
 (ns ^:figwheel-always twitter.core
   (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [com.kaicode.infamous.core :refer [events->chan get-node-by-id render-scene-graph]]
+  (:require [com.kaicode.infamous.core :as infamous :refer [events->chan]]
             [cljs.core.async :refer [alts!]]))
 
 (enable-console-print!)
@@ -71,32 +71,18 @@
                                                                                                         ["navigation" "off"])
                                                                                       :content        id}]}))}]})
 
-(util/save scene-graph)
+(infamous/save scene-graph)
 
-(render-scene-graph "twitterus")
-
-(def channels (for [section-button-node (:node/children (get-node-by-id "footer"))]
-                (events->chan section-button-node "tap" (fn [] (:node/id section-button-node)))))
-
-
-(defn get-famous-components [node]
-  (.. (:node/famous-node node) getComponents))
-
-(defn get-famous-component-by-type-name [node component-type-name]
-  (let [famous-components (get-famous-components node)]
-    (first (filter (fn [component]
-                     (let [cn (.. component -constructor -name)]
-                       (= component-type-name cn)))
-                   famous-components))))
+(infamous/render-scene-graph "twitterus")
 
 (defn get-unselected-nodes [selected-button-node section-button-nodes]
   (filter #(not= % selected-button-node) section-button-nodes))
 
 (defn get-dom-element-and-align-component [id]
-  (let [footer-section-node (get-node-by-id id)
-        section-node (get-node-by-id (str "section-" id))
-        dom-element (get-famous-component-by-type-name footer-section-node "DOMElement")
-        align-component (get-famous-component-by-type-name section-node "Align")]
+  (let [footer-section-node (infamous/get-node-by-id id)
+        section-node (infamous/get-node-by-id (str "section-" id))
+        dom-element (infamous/get-famous-component-by-type-name footer-section-node "DOMElement")
+        align-component (infamous/get-famous-component-by-type-name section-node "Align")]
     [dom-element align-component]))
 
 (defonce DURATION 500)
@@ -112,14 +98,16 @@
     (.. align-component (set 1 0 0 (clj->js {:duration DURATION})))))
 
 (defn switch-on [id]
-  (let [section-button-nodes (:node/children (get-node-by-id "footer"))
-        selected-button-node (get-node-by-id id)
+  (let [section-button-nodes (:node/children (infamous/get-node-by-id "footer"))
+        selected-button-node (infamous/get-node-by-id id)
         unselected-node-ids (map #(:node/id %) (get-unselected-nodes selected-button-node section-button-nodes))]
     (show id)
     (doseq [id unselected-node-ids]
       (hide id))
     ))
 
+(def channels (for [section-button-node (:node/children (infamous/get-node-by-id "footer"))]
+                (events->chan section-button-node "tap" (fn [] (:node/id section-button-node)))))
 (go
   (while true
     (let [[id channel] (alts! channels)]
