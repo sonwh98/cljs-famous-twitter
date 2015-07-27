@@ -44,7 +44,7 @@
                                                                                                         :lineHeight      "100px"
                                                                                                         :borderBottom    "1px solid black"
                                                                                                         :font-size       "12px"
-                                                                                                        :content         (str "tweet" i)}]
+                                                                                                        :content         (str name " " i)}]
                                                                                   })})}
                                   {:node/id            "footer"
                                    :node/size-mode     [DEFAULT ABSOLUTE]
@@ -70,40 +70,42 @@
                                                                                                         ["navigation" "off"])
                                                                                       :content        name}]}))}]})
 
-(infamous/save scene-graph)
 
-(infamous/render-scene-graph "twitterus")
 
 (defn get-unselected-nodes [selected-button-node section-button-nodes]
   (filter #(not= % selected-button-node) section-button-nodes))
 
-(defn get-dom-element-and-align-component [id]
-  (let [footer-section-node (infamous/get-node-by-id id)
-        section-node (infamous/get-node-by-id (str "section-" id))
+(defn get-dom-element-and-align-component [name]
+  (let [footer-section-node (infamous/get-node-by-id name)
+        section-node (infamous/get-node-by-id (str "section-" name))
         dom-element (infamous/get-famous-component-by-type-name footer-section-node "DOMElement")
         align-component (infamous/get-famous-component-by-type-name section-node "Align")]
     [dom-element align-component]))
 
 (defonce TRANSITION-DURATION 500)
 
-(defn show [id]
-  (let [[dom-element align-component] (get-dom-element-and-align-component id)]
+(defn show [name]
+  (let [[dom-element align-component] (get-dom-element-and-align-component name)]
     (.. dom-element (removeClass "off") (addClass "on"))
     (.. align-component (set 0 0 0 (clj->js {:duration TRANSITION-DURATION})))))
 
-(defn hide [id]
-  (let [[dom-element align-component] (get-dom-element-and-align-component id)]
+(defn hide [name]
+  (let [[dom-element align-component] (get-dom-element-and-align-component name)]
     (.. dom-element (removeClass "on") (addClass "off"))
     (.. align-component (set 1 0 0 (clj->js {:duration TRANSITION-DURATION})))))
 
-(defn switch-on [id]
+(defn switch-on [name]
   (let [section-button-nodes (:node/children (infamous/get-node-by-id "footer"))
-        selected-button-node (infamous/get-node-by-id id)
+        selected-button-node (infamous/get-node-by-id name)
         unselected-node-ids (map #(:node/id %) (get-unselected-nodes selected-button-node section-button-nodes))]
-    (show id)
+    (show name)
     (doseq [id unselected-node-ids]
       (hide id))
     ))
+
+(infamous/save scene-graph)
+(infamous/render-scene-graph "twitterus")
+(switch-on "Home")
 
 (def channels (for [section-button-node (:node/children (infamous/get-node-by-id "footer"))]
                 (events->chan section-button-node "tap" (fn [] (:node/id section-button-node)))))
@@ -111,3 +113,4 @@
   (while true
     (let [[id channel] (alts! channels)]
       (switch-on id))))
+
