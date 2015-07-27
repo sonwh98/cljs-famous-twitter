@@ -97,15 +97,17 @@
         align-component (get-famous-component (:node/famous-node section-node) "Align")]
     [dom-element align-component]))
 
+(defonce DURATION 500)
+
 (defn show [id]
   (let [[dom-element align-component] (get-dom-element-and-align-component id)]
     (.. dom-element (removeClass "off") (addClass "on"))
-    (.. align-component (set 0 0 0 (clj->js {:duration 1500})))))
+    (.. align-component (set 0 0 0 (clj->js {:duration DURATION})))))
 
 (defn hide [id]
   (let [[dom-element align-component] (get-dom-element-and-align-component id)]
     (.. dom-element (removeClass "on") (addClass "off"))
-    (.. align-component (set 1 0 0 (clj->js {:duration 1500})))))
+    (.. align-component (set 1 0 0 (clj->js {:duration DURATION})))))
 
 (defn switch-on [id]
   (let [section-button-nodes (:node/children (get-node-by-id "footer"))
