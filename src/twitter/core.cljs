@@ -57,7 +57,7 @@
                                                          (for [i (range num-sections)
                                                                :let [{:keys [name]} (sections i)]]
                                                            {:node/id                name
-                                                            :twitter/section        name
+                                                            :twitter/section-name        name
                                                             :node/align             [(/ i num-sections)]
                                                             :node/proportional-size [(/ 1 num-sections)]
                                                             :node/components        [{:component/type :DOMElement
@@ -108,9 +108,9 @@
 (switch-on "Home")
 
 (def channels (for [section-button-node (:node/children (infamous/get-node-by-id "footer"))]
-                (events->chan section-button-node "tap" (fn [] (:node/id section-button-node)))))
+                (events->chan section-button-node "tap" (fn [] (:twitter/section-name section-button-node)))))
 (go
   (while true
-    (let [[name channel] (alts! channels)]
-      (switch-on name))))
+    (let [[section-name channel] (alts! channels)]
+      (switch-on section-name))))
 
