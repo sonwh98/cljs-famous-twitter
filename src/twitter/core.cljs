@@ -95,9 +95,9 @@
     (.. align-component (set 1 0 0 (clj->js {:duration TRANSITION-DURATION})))))
 
 (defn switch-on [name]
-  (let [selected-button-node (infamous/get-node-by-id name)
-        section-button-nodes (:node/children (infamous/get-node-by-id "footer"))
-        unselected-node-ids (map #(:node/id %) (get-unselected-nodes selected-button-node section-button-nodes))]
+  (let [selected-footer-button-node (infamous/get-node-by-id name)
+        footer-button-nodes (:node/children (infamous/get-node-by-id "footer"))
+        unselected-node-ids (map #(:node/id %) (get-unselected-nodes selected-footer-button-node footer-button-nodes))]
     (show name)
     (doseq [id unselected-node-ids]
       (hide id))
