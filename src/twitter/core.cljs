@@ -28,13 +28,13 @@
                                    :node/differential-size [nil -200 nil]
                                    :node/position          [0 100]
                                    :node/components        [{:component/type :DOMElement}]
-                                   :node/children          (for [{:keys [id]} sections]
+                                   :node/children          (for [{:keys [id tweet-number]} sections]
                                                              {:node/id         (str "section-" id)
                                                               :node/components [{:component/type :DOMElement
                                                                                  :overflow-y     "scroll"
                                                                                  :overflow-x     "hidden"}
                                                                                 {:component/type :Align}]
-                                                              :node/children   (for [i (range 12)]
+                                                              :node/children   (for [i (range tweet-number)]
                                                                                  {:node/size-mode     [DEFAULT ABSOLUTE]
                                                                                   :node/absolute-size [nil 100]
                                                                                   :node/position      [0 (* 100 i)]
