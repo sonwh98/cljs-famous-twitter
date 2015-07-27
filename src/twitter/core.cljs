@@ -1,6 +1,6 @@
 (ns ^:figwheel-always twitter.core
   (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [com.kaicode.infamous.core :as util :refer [events->chan get-node-by-id render-scene-graph]]
+  (:require [com.kaicode.infamous.core :refer [events->chan get-node-by-id render-scene-graph]]
             [cljs.core.async :refer [alts!]]))
 
 (enable-console-print!)
