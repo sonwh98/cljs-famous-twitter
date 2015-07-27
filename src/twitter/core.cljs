@@ -9,10 +9,10 @@
 (defonce ABSOLUTE (.. Size -ABSOLUTE))
 (defonce DEFAULT (.. Size -RELATIVE))
 
-(def sections [{:id "Home" :tweet-number 50}
-               {:id "Discover" :tweet-number 50}
-               {:id "Connect" :tweet-number 50}
-               {:id "Me" :tweet-number 25}])
+(def sections [{:name "Home" :tweet-number 50}
+               {:name "Discover" :tweet-number 50}
+               {:name "Connect" :tweet-number 50}
+               {:name "Me" :tweet-number 25}])
 
 (def scene-graph {:node/id       "twitterus"
                   :node/children [{:node/id            "header"
@@ -28,8 +28,8 @@
                                    :node/differential-size [nil -200 nil]
                                    :node/position          [0 100]
                                    :node/components        [{:component/type :DOMElement}]
-                                   :node/children          (for [{:keys [id tweet-number]} sections]
-                                                             {:node/id         (str "section-" id)
+                                   :node/children          (for [{:keys [name tweet-number]} sections]
+                                                             {:node/id         (str "section-" name)
                                                               :node/components [{:component/type :DOMElement
                                                                                  :overflow-y     "scroll"
                                                                                  :overflow-x     "hidden"}
@@ -55,8 +55,8 @@
                                                          }]
                                    :node/children      (let [num-sections (count sections)]
                                                          (for [i (range num-sections)
-                                                               :let [{:keys [id tweet-number]} (sections i)]]
-                                                           {:node/id                id
+                                                               :let [{:keys [name tweet-number]} (sections i)]]
+                                                           {:node/id                name
                                                             :node/align             [(/ i num-sections)]
                                                             :node/proportional-size [(/ 1 num-sections)]
                                                             :node/components        [{:component/type :DOMElement
@@ -67,7 +67,7 @@
                                                                                       :classes        (if (= i 0)
                                                                                                         ["navigation" "on"]
                                                                                                         ["navigation" "off"])
-                                                                                      :content        id}]}))}]})
+                                                                                      :content        name}]}))}]})
 
 (infamous/save scene-graph)
 
