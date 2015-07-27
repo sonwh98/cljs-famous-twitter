@@ -111,6 +111,6 @@
                 (events->chan section-button-node "tap" (fn [] (:node/id section-button-node)))))
 (go
   (while true
-    (let [[id channel] (alts! channels)]
-      (switch-on id))))
+    (let [[name channel] (alts! channels)]
+      (switch-on name))))
 
