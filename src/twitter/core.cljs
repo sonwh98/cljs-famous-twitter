@@ -57,6 +57,7 @@
                                                          (for [i (range num-sections)
                                                                :let [{:keys [name]} (sections i)]]
                                                            {:node/id                name
+                                                            :twitter/section        name
                                                             :node/align             [(/ i num-sections)]
                                                             :node/proportional-size [(/ 1 num-sections)]
                                                             :node/components        [{:component/type :DOMElement
