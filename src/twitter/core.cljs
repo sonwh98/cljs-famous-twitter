@@ -1,13 +1,11 @@
 (ns ^:figwheel-always twitter.core
   (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [com.kaicode.infamous.core :as infamous :refer [events->chan]]
+  (:require [com.kaicode.infamous.core :as infamous :refer [events->chan famous]]
             [cljs.core.async :refer [alts!]]))
 
 (enable-console-print!)
 
-(defonce famous js/famous)
 (defonce Size (.. famous -components -Size))
-
 (defonce ABSOLUTE (.. Size -ABSOLUTE))
 (defonce DEFAULT (.. Size -RELATIVE))
 
@@ -85,17 +83,17 @@
         align-component (infamous/get-famous-component-by-type-name section-node "Align")]
     [dom-element align-component]))
 
-(defonce DURATION 500)
+(defonce TRANSITION-DURATION 500)
 
 (defn show [id]
   (let [[dom-element align-component] (get-dom-element-and-align-component id)]
     (.. dom-element (removeClass "off") (addClass "on"))
-    (.. align-component (set 0 0 0 (clj->js {:duration DURATION})))))
+    (.. align-component (set 0 0 0 (clj->js {:duration TRANSITION-DURATION})))))
 
 (defn hide [id]
   (let [[dom-element align-component] (get-dom-element-and-align-component id)]
     (.. dom-element (removeClass "on") (addClass "off"))
-    (.. align-component (set 1 0 0 (clj->js {:duration DURATION})))))
+    (.. align-component (set 1 0 0 (clj->js {:duration TRANSITION-DURATION})))))
 
 (defn switch-on [id]
   (let [section-button-nodes (:node/children (infamous/get-node-by-id "footer"))
