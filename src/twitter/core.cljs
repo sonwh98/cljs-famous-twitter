@@ -55,7 +55,7 @@
                                                          }]
                                    :node/children      (let [num-sections (count sections)]
                                                          (for [i (range num-sections)
-                                                               :let [{:keys [name tweet-number]} (sections i)]]
+                                                               :let [{:keys [name]} (sections i)]]
                                                            {:node/id                name
                                                             :node/align             [(/ i num-sections)]
                                                             :node/proportional-size [(/ 1 num-sections)]
