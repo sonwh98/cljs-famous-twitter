@@ -57,7 +57,7 @@
                                                          (for [i (range num-sections)
                                                                :let [{:keys [name]} (sections i)]]
                                                            {:node/id                name
-                                                            :twitter/section-name        name
+                                                            :twitter/section-name   name
                                                             :node/align             [(/ i num-sections)]
                                                             :node/proportional-size [(/ 1 num-sections)]
                                                             :node/components        [{:component/type :DOMElement
@@ -95,8 +95,8 @@
     (.. align-component (set 1 0 0 (clj->js {:duration TRANSITION-DURATION})))))
 
 (defn switch-on [name]
-  (let [section-button-nodes (:node/children (infamous/get-node-by-id "footer"))
-        selected-button-node (infamous/get-node-by-id name)
+  (let [selected-button-node (infamous/get-node-by-id name)
+        section-button-nodes (:node/children (infamous/get-node-by-id "footer"))
         unselected-node-ids (map #(:node/id %) (get-unselected-nodes selected-button-node section-button-nodes))]
     (show name)
     (doseq [id unselected-node-ids]
