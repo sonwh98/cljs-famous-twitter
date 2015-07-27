@@ -97,9 +97,9 @@
 (defn switch-on [name]
   (let [selected-footer-button-node (infamous/get-node-by-id name)
         footer-button-nodes (:node/children (infamous/get-node-by-id "footer"))
-        unselected-node-ids (map #(:node/id %) (get-unselected-nodes selected-footer-button-node footer-button-nodes))]
+        unselected-footer-button-node-ids (map #(:node/id %) (get-unselected-nodes selected-footer-button-node footer-button-nodes))]
     (show name)
-    (doseq [id unselected-node-ids]
+    (doseq [id unselected-footer-button-node-ids]
       (hide id))
     ))
 
