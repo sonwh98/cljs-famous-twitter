@@ -1,7 +1,7 @@
 (ns ^:figwheel-always twitter.util
   (:require [cljs.core.async :refer [put! chan]]
             [datascript :as d]
-            [com.famous.Famous]))
+            [com.kaicode.Famous]))
 
 (defonce famous js/famous)
 (defonce DOMElement (.. famous -domRenderables -DOMElement))

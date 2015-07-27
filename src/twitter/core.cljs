@@ -1,7 +1,6 @@
 (ns ^:figwheel-always twitter.core
   (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [com.famous.Famous]
-            [reagent.core :as reagent]
+  (:require [com.kaicode.Famous]
             [twitter.util :as util :refer [events->chan get-node-by-id render-scene-graph]]
             [cljs.core.async :refer [alts!]]))
 
@@ -81,11 +80,15 @@
                 (events->chan section-button-node "tap" (fn [] (:node/id section-button-node)))))
 
 
-(defn get-famous-component [famous-node component-name]
-  (first (filter (fn [component]
-                   (let [cn (.. component -constructor -name)]
-                     (= component-name cn)))
-                 (.. famous-node getComponents))))
+(defn get-famous-components [node]
+  (.. (:node/famous-node node) getComponents))
+
+(defn get-famous-component-by-type-name [node component-type-name]
+  (let [famous-components (get-famous-components node)]
+    (first (filter (fn [component]
+                     (let [cn (.. component -constructor -name)]
+                       (= component-type-name cn)))
+                   famous-components))))
 
 (defn get-unselected-nodes [selected-button-node section-button-nodes]
   (filter #(not= % selected-button-node) section-button-nodes))
@@ -93,8 +96,8 @@
 (defn get-dom-element-and-align-component [id]
   (let [footer-section-node (get-node-by-id id)
         section-node (get-node-by-id (str "section-" id))
-        dom-element (get-famous-component (:node/famous-node footer-section-node) "DOMElement")
-        align-component (get-famous-component (:node/famous-node section-node) "Align")]
+        dom-element (get-famous-component-by-type-name footer-section-node "DOMElement")
+        align-component (get-famous-component-by-type-name section-node "Align")]
     [dom-element align-component]))
 
 (defonce DURATION 500)
