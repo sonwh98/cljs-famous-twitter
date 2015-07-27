@@ -9,7 +9,7 @@
 (defonce ABSOLUTE (.. Size -ABSOLUTE))
 (defonce DEFAULT (.. Size -RELATIVE))
 
-(def sections [{:name "Home" :tweet-number 50}
+(def sections [{:name "Home" :tweet-number 6}
                {:name "Discover" :tweet-number 50}
                {:name "Connect" :tweet-number 50}
                {:name "Me" :tweet-number 25}])
@@ -28,7 +28,7 @@
                                    :node/differential-size [nil -200 nil]
                                    :node/position          [0 100]
                                    :node/components        [{:component/type :DOMElement}]
-                                   :node/children          (for [{:keys [name tweet-number]} sections]
+                                   :node/children          (for [{:keys [name tweet-number]} (reverse sections)]
                                                              {:node/id         (str "section-" name)
                                                               :node/components [{:component/type :DOMElement
                                                                                  :overflow-y     "scroll"
@@ -105,7 +105,6 @@
 
 (infamous/save scene-graph)
 (infamous/render-scene-graph "twitterus")
-(switch-on "Home")
 
 (def channels (for [section-button-node (:node/children (infamous/get-node-by-id "footer"))]
                 (events->chan section-button-node "tap" (fn [] (:twitter/section-name section-button-node)))))
