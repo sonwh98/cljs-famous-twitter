@@ -83,26 +83,26 @@
 
 (defonce TRANSITION-DURATION 500)
 
-(defn show [name]
-  (let [[section-dom-element section-align] (get-dom-element-and-align-component name)
+(defn show [section-name]
+  (let [[section-dom-element section-align] (get-dom-element-and-align-component section-name)
         header-node (infamous/get-node-by-id "header")
         header-dom-element (infamous/get-famous-component-by-type-name header-node "DOMElement")]
-    (.. header-dom-element (setContent name))
+    (.. header-dom-element (setContent section-name))
     (.. section-dom-element (removeClass "off") (addClass "on"))
     (.. section-align (set 0 0 0 (clj->js {:duration TRANSITION-DURATION})))))
 
-(defn hide [name]
-  (let [[dom-element align-component] (get-dom-element-and-align-component name)]
+(defn hide [section-name]
+  (let [[dom-element align-component] (get-dom-element-and-align-component section-name)]
     (.. dom-element (removeClass "on") (addClass "off"))
     (.. align-component (set 1 0 0 (clj->js {:duration TRANSITION-DURATION})))))
 
-(defn switch-on [name]
-  (let [selected-footer-button-node (infamous/get-node-by-id name)
+(defn switch-on [section-name]
+  (let [selected-footer-button-node (infamous/get-node-by-id section-name)
         footer-button-nodes (:node/children (infamous/get-node-by-id "footer"))
-        unselected-footer-button-node-ids (map #(:node/id %) (get-unselected-nodes selected-footer-button-node footer-button-nodes))]
-    (show name)
-    (doseq [id unselected-footer-button-node-ids]
-      (hide id))
+        unselected-section-names (map #(:twitter/section-name %) (get-unselected-nodes selected-footer-button-node footer-button-nodes))]
+    (show section-name)
+    (doseq [section-name unselected-section-names]
+      (hide section-name))
     ))
 
 (infamous/save scene-graph)                                 ;persist the scene-graph to datascript
