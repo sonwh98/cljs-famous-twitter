@@ -116,4 +116,3 @@
   (while true
     (let [[section-name channel] (alts! channels)]
       (switch-on section-name))))
-
