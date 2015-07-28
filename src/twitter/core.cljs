@@ -23,7 +23,6 @@
                                                          :lineHeight     "100px"
                                                          :classes        ["header"]
                                                          :content        "Home"}]}
-
                                   {:node/id                "swapper"
                                    :node/differential-size [nil -200 nil]
                                    :node/position          [0 100]
@@ -89,7 +88,6 @@
         header-node (infamous/get-node-by-id "header")
         header-dom-element (infamous/get-famous-component-by-type-name header-node "DOMElement")]
     (.. header-dom-element (setContent name))
-
     (.. section-dom-element (removeClass "off") (addClass "on"))
     (.. section-align (set 0 0 0 (clj->js {:duration TRANSITION-DURATION})))))
 
