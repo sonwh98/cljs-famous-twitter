@@ -85,12 +85,13 @@
 (defonce TRANSITION-DURATION 500)
 
 (defn show [name]
-  (let [[dom-element align-component] (get-dom-element-and-align-component name)
+  (let [[section-dom-element section-align] (get-dom-element-and-align-component name)
         header-node (infamous/get-node-by-id "header")
         header-dom-element (infamous/get-famous-component-by-type-name header-node "DOMElement")]
     (.. header-dom-element (setContent name))
-    (.. dom-element (removeClass "off") (addClass "on"))
-    (.. align-component (set 0 0 0 (clj->js {:duration TRANSITION-DURATION})))))
+
+    (.. section-dom-element (removeClass "off") (addClass "on"))
+    (.. section-align (set 0 0 0 (clj->js {:duration TRANSITION-DURATION})))))
 
 (defn hide [name]
   (let [[dom-element align-component] (get-dom-element-and-align-component name)]
