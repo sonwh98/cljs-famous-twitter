@@ -74,9 +74,6 @@
 
 
 
-(defn get-unselected-nodes [selected-button-node section-button-nodes]
-  (filter #(not= % selected-button-node) section-button-nodes))
-
 (defn get-dom-element-and-align-component [section-name]
   (let [footer-section-node (infamous/get-node-by-id (str "footer-" section-name))
         section-node (infamous/get-node-by-id (str "section-" section-name))
@@ -102,7 +99,8 @@
 (defn hide-all-sections-except [section-name]
   (let [selected-footer-button-node (infamous/get-node-by-id (str "footer-" section-name))
         footer-button-nodes (:node/children (infamous/get-node-by-id "footer"))
-        unselected-section-names (map #(:twitter/section-name %) (get-unselected-nodes selected-footer-button-node footer-button-nodes))]
+        unselected-nodes (filter #(not= % selected-footer-button-node) footer-button-nodes)
+        unselected-section-names (map #(:twitter/section-name %) unselected-nodes)]
     (doseq [section-name unselected-section-names]
       (hide section-name))))
 
