@@ -99,18 +99,19 @@
     (.. dom-element (removeClass "on") (addClass "off"))
     (.. align-component (set 1 0 0 (clj->js {:duration TRANSITION-DURATION})))))
 
-(defn switch-on [section-name]
+(defn hide-all-sections-except [section-name]
   (let [selected-footer-button-node (infamous/get-node-by-id (str "footer-" section-name))
         footer-button-nodes (:node/children (infamous/get-node-by-id "footer"))
         unselected-section-names (map #(:twitter/section-name %) (get-unselected-nodes selected-footer-button-node footer-button-nodes))]
-    (show section-name)
     (doseq [section-name unselected-section-names]
-      (hide section-name))
-    ))
+      (hide section-name))))
+
+(defn switch-on [section-name]
+  (show section-name)
+  (hide-all-sections-except section-name))
 
 (infamous/save scene-graph)                                 ;persist the scene-graph to datascript
 (infamous/render-scene-graph "twitterus")                   ;render the scene-graph starting from the root node "twitterus"
-;(switch-on "Home")
 
 ;convert events on footer section nodes into core.async channels.
 ;put the :twitter/section-name into the channel when the node's "tap" event is triggered
