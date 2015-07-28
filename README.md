@@ -1,5 +1,9 @@
-# cljs-famous-twitter
-This is a ClojureScript project so make sure you have Leinigen installed http://leiningen.org/
+# Description
+This is a ClojureScript rewrite of the Famous Twitter example http://famous.org/learn/Twitterus/index.html
+using Infamous https://github.com/sonwh98/infamous
+
+# Run
+This is a ClojureScript project so make sure you have Leiningen installed http://leiningen.org/
 
 Run the following at the commandline:
 ```
