@@ -22,7 +22,7 @@
                                                          :fontSize       "30px"
                                                          :lineHeight     "100px"
                                                          :classes        ["header"]
-                                                         :content        "Twitter"}]}
+                                                         :content        "Home"}]}
 
                                   {:node/id                "swapper"
                                    :node/differential-size [nil -200 nil]
@@ -85,7 +85,10 @@
 (defonce TRANSITION-DURATION 500)
 
 (defn show [name]
-  (let [[dom-element align-component] (get-dom-element-and-align-component name)]
+  (let [[dom-element align-component] (get-dom-element-and-align-component name)
+        header-node (infamous/get-node-by-id "header")
+        header-dom-element (infamous/get-famous-component-by-type-name header-node "DOMElement")]
+    (.. header-dom-element (setContent name))
     (.. dom-element (removeClass "off") (addClass "on"))
     (.. align-component (set 0 0 0 (clj->js {:duration TRANSITION-DURATION})))))
 
