@@ -1,6 +1,6 @@
 (ns ^:figwheel-always twitter.core
   (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [com.kaicode.infamous.core :as infamous :refer [events->chan famous]]
+  (:require [com.kaicode.infamous :as infamous :refer [events->chan famous]]
             [cljs.core.async :refer [alts!]]))
 
 (enable-console-print!)
@@ -106,6 +106,8 @@
 (infamous/save scene-graph)
 (infamous/render-scene-graph "twitterus")
 
+;convert events on footer section nodes into core.async channels.
+;put the :twitter/section-name into the channel when the node's "tap" event is triggered
 (def channels (for [section-button-node (:node/children (infamous/get-node-by-id "footer"))]
                 (events->chan section-button-node "tap" (fn [] (:twitter/section-name section-button-node)))))
 (go
