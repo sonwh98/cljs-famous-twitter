@@ -29,6 +29,9 @@
                                    :node/components        [{:component/type :DOMElement}]
                                    :node/children          (for [{:keys [name tweet-number]} (reverse sections)]
                                                              {:node/id         (str "section-" name)
+                                                              :node/align      (if (= name "Home")
+                                                                                 [0 0 0]
+                                                                                 [1 0 0])
                                                               :node/components [{:component/type :DOMElement
                                                                                  :overflow-y     "scroll"
                                                                                  :overflow-x     "hidden"}
@@ -55,7 +58,7 @@
                                    :node/children      (let [num-sections (count sections)]
                                                          (for [i (range num-sections)
                                                                :let [{:keys [name]} (sections i)]]
-                                                           {:node/id                name
+                                                           {:node/id                (str "footer-" name)
                                                             :twitter/section-name   name ;NOTE you can attach any arbitary data into a node
                                                             :node/align             [(/ i num-sections)]
                                                             :node/proportional-size [(/ 1 num-sections)]
@@ -74,9 +77,9 @@
 (defn get-unselected-nodes [selected-button-node section-button-nodes]
   (filter #(not= % selected-button-node) section-button-nodes))
 
-(defn get-dom-element-and-align-component [name]
-  (let [footer-section-node (infamous/get-node-by-id name)
-        section-node (infamous/get-node-by-id (str "section-" name))
+(defn get-dom-element-and-align-component [section-name]
+  (let [footer-section-node (infamous/get-node-by-id (str "footer-" section-name))
+        section-node (infamous/get-node-by-id (str "section-" section-name))
         dom-element (infamous/get-famous-component-by-type-name footer-section-node "DOMElement")
         align-component (infamous/get-famous-component-by-type-name section-node "Align")]
     [dom-element align-component]))
@@ -97,7 +100,7 @@
     (.. align-component (set 1 0 0 (clj->js {:duration TRANSITION-DURATION})))))
 
 (defn switch-on [section-name]
-  (let [selected-footer-button-node (infamous/get-node-by-id section-name)
+  (let [selected-footer-button-node (infamous/get-node-by-id (str "footer-" section-name))
         footer-button-nodes (:node/children (infamous/get-node-by-id "footer"))
         unselected-section-names (map #(:twitter/section-name %) (get-unselected-nodes selected-footer-button-node footer-button-nodes))]
     (show section-name)
@@ -107,6 +110,7 @@
 
 (infamous/save scene-graph)                                 ;persist the scene-graph to datascript
 (infamous/render-scene-graph "twitterus")                   ;render the scene-graph starting from the root node "twitterus"
+;(switch-on "Home")
 
 ;convert events on footer section nodes into core.async channels.
 ;put the :twitter/section-name into the channel when the node's "tap" event is triggered
