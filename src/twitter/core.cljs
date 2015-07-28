@@ -57,7 +57,7 @@
                                                          (for [i (range num-sections)
                                                                :let [{:keys [name]} (sections i)]]
                                                            {:node/id                name
-                                                            :twitter/section-name   name
+                                                            :twitter/section-name   name ;NOTE you can attach any arbitary data into a node
                                                             :node/align             [(/ i num-sections)]
                                                             :node/proportional-size [(/ 1 num-sections)]
                                                             :node/components        [{:component/type :DOMElement
