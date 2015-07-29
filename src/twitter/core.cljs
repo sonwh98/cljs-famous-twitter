@@ -22,7 +22,13 @@
                                                          :fontSize       "30px"
                                                          :lineHeight     "100px"
                                                          :classes        ["header"]
-                                                         :content        "Home"}]}
+                                                         :content        "Home"}]
+                                   :node/children      [{:node/id            "hamburger" ;https://css-tricks.com/three-line-menu-navicon/
+                                                         :node/size-mode     [ABSOLUTE ABSOLUTE]
+                                                         :node/absolute-size [100 100]
+                                                         :node/align         [0 0 0]
+                                                         :node/components    [{:component/type :DOMElement
+                                                                               :content        "&#9776;"}]}]}
                                   {:node/id                "swapper"
                                    :node/differential-size [nil -200 nil]
                                    :node/position          [0 100]
@@ -108,7 +114,7 @@
   (show section-name)
   (hide-all-sections-except section-name))
 
-(infamous/render-scene-graph scene-graph "body")                   ;render the scene-graph starting from the root node "twitterus"
+(infamous/render-scene-graph scene-graph "body")            ;render the scene-graph starting from the root node "twitterus"
 
 ;convert events on footer section nodes into core.async channels.
 ;put the :twitter/section-name into the channel when the node's "tap" event is triggered
