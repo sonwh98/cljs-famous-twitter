@@ -115,7 +115,7 @@
   (show section-name)
   (hide-all-sections-except section-name))
 
-(infamous/render-scene-graph scene-graph "body")            ;render the scene-graph starting from the root node "twitterus"
+(infamous/render-scene-graph scene-graph "body")            ;render the scene-graph and mount it on the "body" css selector
 
 ;convert events on footer section nodes into core.async channels.
 ;put the :twitter/section-name into the channel when the node's "tap" event is triggered

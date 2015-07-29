@@ -11,3 +11,10 @@ lein figwheel
 ```
 
 Then open your web browser to http://localhost:3449/index.html
+
+Test out a modified version on the hamburger branch
+
+```
+git checkout hamburger
+lein figwheel
+```
