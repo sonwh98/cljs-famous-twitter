@@ -27,9 +27,24 @@
                                      :node/children      [{:node/id            "hamburger" ;https://css-tricks.com/three-line-menu-navicon/
                                                            :node/size-mode     [ABSOLUTE ABSOLUTE]
                                                            :node/absolute-size [100 100]
-                                                           :node/align         [0 0 0]
                                                            :node/components    [{:component/type :DOMElement
                                                                                  :content        "&#9776;"}]}]}
+                                    {:node/id         "side"
+                                     :node/size-mode  [ABSOLUTE ABSOLUTE]
+                                     :node/components [{:component/type :Align}]
+                                     :node/children   (map-indexed (fn [index side-text]
+                                                                     {:node/id          side-text
+                                                                      :node/mount-point [0 1]
+                                                                      :node/align       [0 1]
+                                                                      :node/position    [-250 (* index 100)]
+                                                                      :node/components  [{:component/type  :DOMElement
+                                                                                          :lineHeight      "100px"
+                                                                                          :font-size       "52px"
+                                                                                          :classes         ["navigation" "on"]
+                                                                                          :content         side-text}]}
+                                                                     ) ["Settings" "Account" "Logout"])
+
+                                     }
                                     {:node/id                "swapper"
                                      :node/differential-size [nil -200 nil]
                                      :node/position          [0 100]
