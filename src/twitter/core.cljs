@@ -14,69 +14,70 @@
                {:name "Connect" :tweet-number 50}
                {:name "Me" :tweet-number 25}])
 
-(def scene-graph {:node/id       "twitterus"
-                  :node/children [{:node/id            "header"
-                                   :node/size-mode     [DEFAULT ABSOLUTE]
-                                   :node/absolute-size [nil 100]
-                                   :node/components    [{:component/type :DOMElement
-                                                         :fontSize       "30px"
-                                                         :lineHeight     "100px"
-                                                         :classes        ["header"]
-                                                         :content        "Home"}]
-                                   :node/children      [{:node/id            "hamburger" ;https://css-tricks.com/three-line-menu-navicon/
-                                                         :node/size-mode     [ABSOLUTE ABSOLUTE]
-                                                         :node/absolute-size [100 100]
-                                                         :node/align         [0 0 0]
-                                                         :node/components    [{:component/type :DOMElement
-                                                                               :content        "&#9776;"}]}]}
-                                  {:node/id                "swapper"
-                                   :node/differential-size [nil -200 nil]
-                                   :node/position          [0 100]
-                                   :node/components        [{:component/type :DOMElement}]
-                                   :node/children          (for [{:keys [name tweet-number]} (reverse sections)]
-                                                             {:node/id         (str "section-" name)
-                                                              :node/align      (if (= name "Home")
-                                                                                 [0 0 0]
-                                                                                 [1 0 0])
-                                                              :node/components [{:component/type :DOMElement
-                                                                                 :overflow-y     "scroll"
-                                                                                 :overflow-x     "hidden"}
-                                                                                {:component/type :Align}]
-                                                              :node/children   (for [i (range tweet-number)]
-                                                                                 {:node/size-mode     [DEFAULT ABSOLUTE]
-                                                                                  :node/absolute-size [nil 100]
-                                                                                  :node/position      [0 (* 100 i)]
-                                                                                  :node/components    [{:component/type  :DOMElement
-                                                                                                        :backgroundColor (str "#" (.toString (rand-int 16rFFFFFF) 16))
-                                                                                                        :boxingSize      "border-box"
-                                                                                                        :lineHeight      "100px"
-                                                                                                        :borderBottom    "1px solid black"
-                                                                                                        :font-size       "12px"
-                                                                                                        :content         (str name " " i)}]
-                                                                                  })})}
-                                  {:node/id            "footer"
-                                   :node/size-mode     [DEFAULT ABSOLUTE]
-                                   :node/absolute-size [nil 100]
-                                   :node/align         [0 1]
-                                   :node/mount-point   [0 1]
-                                   :node/components    [{:component/type :DOMElement
-                                                         }]
-                                   :node/children      (let [num-sections (count sections)]
-                                                         (for [i (range num-sections)
-                                                               :let [{:keys [name]} (sections i)]]
-                                                           {:node/id                (str "footer-" name)
-                                                            :twitter/section-name   name ;NOTE you can attach any arbitary data into a node
-                                                            :node/align             [(/ i num-sections)]
-                                                            :node/proportional-size [(/ 1 num-sections)]
-                                                            :node/components        [{:component/type :DOMElement
-                                                                                      :textAlign      "center"
-                                                                                      :lineHeight     "100px"
-                                                                                      :fontSize       "18px"
-                                                                                      :cursor         "pointer"
-                                                                                      :classes        (if (= i 0)
-                                                                                                        ["navigation" "on"]
-                                                                                                        ["navigation" "off"])
-                                                                                      :content        name}]}))}]})
+(def scene-graph {:node/id         "twitterus"
+                  :node/components [{:component/type :Align}]
+                  :node/children   [{:node/id            "header"
+                                     :node/size-mode     [DEFAULT ABSOLUTE]
+                                     :node/absolute-size [nil 100]
+                                     :node/components    [{:component/type :DOMElement
+                                                           :fontSize       "30px"
+                                                           :lineHeight     "100px"
+                                                           :classes        ["header"]
+                                                           :content        "Home"}]
+                                     :node/children      [{:node/id            "hamburger" ;https://css-tricks.com/three-line-menu-navicon/
+                                                           :node/size-mode     [ABSOLUTE ABSOLUTE]
+                                                           :node/absolute-size [100 100]
+                                                           :node/align         [0 0 0]
+                                                           :node/components    [{:component/type :DOMElement
+                                                                                 :content        "&#9776;"}]}]}
+                                    {:node/id                "swapper"
+                                     :node/differential-size [nil -200 nil]
+                                     :node/position          [0 100]
+                                     :node/components        [{:component/type :DOMElement}]
+                                     :node/children          (for [{:keys [name tweet-number]} (reverse sections)]
+                                                               {:node/id         (str "section-" name)
+                                                                :node/align      (if (= name "Home")
+                                                                                   [0 0 0]
+                                                                                   [1 0 0])
+                                                                :node/components [{:component/type :DOMElement
+                                                                                   :overflow-y     "scroll"
+                                                                                   :overflow-x     "hidden"}
+                                                                                  {:component/type :Align}]
+                                                                :node/children   (for [i (range tweet-number)]
+                                                                                   {:node/size-mode     [DEFAULT ABSOLUTE]
+                                                                                    :node/absolute-size [nil 100]
+                                                                                    :node/position      [0 (* 100 i)]
+                                                                                    :node/components    [{:component/type  :DOMElement
+                                                                                                          :backgroundColor (str "#" (.toString (rand-int 16rFFFFFF) 16))
+                                                                                                          :boxingSize      "border-box"
+                                                                                                          :lineHeight      "100px"
+                                                                                                          :borderBottom    "1px solid black"
+                                                                                                          :font-size       "12px"
+                                                                                                          :content         (str name " " i)}]
+                                                                                    })})}
+                                    {:node/id            "footer"
+                                     :node/size-mode     [DEFAULT ABSOLUTE]
+                                     :node/absolute-size [nil 100]
+                                     :node/align         [0 1]
+                                     :node/mount-point   [0 1]
+                                     :node/components    [{:component/type :DOMElement
+                                                           }]
+                                     :node/children      (let [num-sections (count sections)]
+                                                           (for [i (range num-sections)
+                                                                 :let [{:keys [name]} (sections i)]]
+                                                             {:node/id                (str "footer-" name)
+                                                              :twitter/section-name   name ;NOTE you can attach any arbitary data into a node
+                                                              :node/align             [(/ i num-sections)]
+                                                              :node/proportional-size [(/ 1 num-sections)]
+                                                              :node/components        [{:component/type :DOMElement
+                                                                                        :textAlign      "center"
+                                                                                        :lineHeight     "100px"
+                                                                                        :fontSize       "18px"
+                                                                                        :cursor         "pointer"
+                                                                                        :classes        (if (= i 0)
+                                                                                                          ["navigation" "on"]
+                                                                                                          ["navigation" "off"])
+                                                                                        :content        name}]}))}]})
 
 
 
@@ -126,5 +127,14 @@
       (switch-on section-name))))
 
 (def hamburger-channel (events->chan (infamous/get-node-by-id "hamburger") "tap" #(identity "hamburge pressed")))
-(go (while true
-      (println (<! hamburger-channel))))
+(go (let [flag (atom true)]
+      (while true
+        (println (<! hamburger-channel))
+        (let [root-node (infamous/get-node-by-id "twitterus")
+              align-component (infamous/get-famous-component-by-type-name root-node "Align")]
+
+          (if @flag
+            (.. align-component (set 0.25 0 0 (clj->js {:duration TRANSITION-DURATION})))
+            (.. align-component (set 0 0 0 (clj->js {:duration TRANSITION-DURATION}))))
+
+          (reset! flag (not @flag))))))
