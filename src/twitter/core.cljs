@@ -108,8 +108,7 @@
   (show section-name)
   (hide-all-sections-except section-name))
 
-(infamous/save scene-graph)                                 ;persist the scene-graph to datascript
-(infamous/render-scene-graph "twitterus")                   ;render the scene-graph starting from the root node "twitterus"
+(infamous/render-scene-graph scene-graph "body")                   ;render the scene-graph starting from the root node "twitterus"
 
 ;convert events on footer section nodes into core.async channels.
 ;put the :twitter/section-name into the channel when the node's "tap" event is triggered
