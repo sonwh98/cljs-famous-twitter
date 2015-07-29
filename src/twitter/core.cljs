@@ -1,7 +1,7 @@
 (ns ^:figwheel-always twitter.core
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [com.kaicode.infamous :as infamous :refer [events->chan famous]]
-            [cljs.core.async :refer [alts!]]))
+            [cljs.core.async :refer [alts! <!]]))
 
 (enable-console-print!)
 
@@ -124,3 +124,7 @@
   (while true
     (let [[section-name channel] (alts! channels)]
       (switch-on section-name))))
+
+(def hamburger-channel (events->chan (infamous/get-node-by-id "hamburger") "tap" #(identity "hamburge pressed")))
+(go (while true
+      (println (<! hamburger-channel))))
