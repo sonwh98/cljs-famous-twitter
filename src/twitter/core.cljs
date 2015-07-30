@@ -10,9 +10,8 @@
 (defonce DEFAULT (.. Size -RELATIVE))
 
 (def sections [{:name "Home" :tweet-number 6}
-               {:name "Discover" :tweet-number 50}
-               {:name "Connect" :tweet-number 50}
-               {:name "Me" :tweet-number 25}])
+
+               ])
 
 (def scene-graph {:node/id       "twitterus"
                   :node/children [{:node/id            "header"
@@ -22,55 +21,29 @@
                                                          :fontSize       "30px"
                                                          :lineHeight     "100px"
                                                          :classes        ["header"]
-                                                         :content        "Home"}]}
+                                                         :content        "Login"}]}
                                   {:node/id                "swapper"
                                    :node/differential-size [nil -200 nil]
                                    :node/position          [0 100]
                                    :node/components        [{:component/type :DOMElement}]
-                                   :node/children          (for [{:keys [name tweet-number]} (reverse sections)]
-                                                             {:node/id         (str "section-" name)
-                                                              :node/align      (if (= name "Home")
-                                                                                 [0 0 0]
-                                                                                 [1 0 0])
-                                                              :node/components [{:component/type :DOMElement
-                                                                                 :overflow-y     "scroll"
-                                                                                 :overflow-x     "hidden"}
-                                                                                {:component/type :Align}]
-                                                              :node/children   (for [i (range tweet-number)]
-                                                                                 {:node/size-mode     [DEFAULT ABSOLUTE]
-                                                                                  :node/absolute-size [nil 100]
-                                                                                  :node/position      [0 (* 100 i)]
-                                                                                  :node/components    [{:component/type  :DOMElement
-                                                                                                        :backgroundColor (str "#" (.toString (rand-int 16rFFFFFF) 16))
-                                                                                                        :boxingSize      "border-box"
-                                                                                                        :lineHeight      "100px"
-                                                                                                        :borderBottom    "1px solid black"
-                                                                                                        :font-size       "12px"
-                                                                                                        :content         (str name " " i)}]
-                                                                                  })})}
-                                  {:node/id            "footer"
-                                   :node/size-mode     [DEFAULT ABSOLUTE]
-                                   :node/absolute-size [nil 100]
-                                   :node/align         [0 1]
-                                   :node/mount-point   [0 1]
-                                   :node/components    [{:component/type :DOMElement
-                                                         }]
-                                   :node/children      (let [num-sections (count sections)]
-                                                         (for [i (range num-sections)
-                                                               :let [{:keys [name]} (sections i)]]
-                                                           {:node/id                (str "footer-" name)
-                                                            :twitter/section-name   name ;NOTE you can attach any arbitary data into a node
-                                                            :node/align             [(/ i num-sections)]
-                                                            :node/proportional-size [(/ 1 num-sections)]
-                                                            :node/components        [{:component/type :DOMElement
-                                                                                      :textAlign      "center"
-                                                                                      :lineHeight     "100px"
-                                                                                      :fontSize       "18px"
-                                                                                      :cursor         "pointer"
-                                                                                      :classes        (if (= i 0)
-                                                                                                        ["navigation" "on"]
-                                                                                                        ["navigation" "off"])
-                                                                                      :content        name}]}))}]})
+                                   :node/children          [{:node/id         "section-Home"
+                                                             :node/align      [0 0 0]
+                                                             :node/components [{:component/type :DOMElement
+                                                                                :overflow-y     "scroll"
+                                                                                :overflow-x     "hidden"}
+                                                                               {:component/type :Align}]
+                                                             :node/children   [{:node/size-mode     [DEFAULT ABSOLUTE]
+                                                                                :node/absolute-size [nil 100]
+                                                                                :node/position      [0 100]
+                                                                                :node/components    [{:component/type  :DOMElement
+                                                                                                      :backgroundColor (str "#" (.toString (rand-int 16rFFFFFF) 16))
+                                                                                                      :boxingSize      "border-box"
+                                                                                                      :lineHeight      "100px"
+                                                                                                      :borderBottom    "1px solid black"
+                                                                                                      :font-size       "12px"
+                                                                                                      :content         (str "Login" )}]
+                                                                                }]}]}
+                                  ]})
 
 
 
@@ -110,11 +83,3 @@
 
 (infamous/render-scene-graph scene-graph "body")            ;render the scene-graph and mount it on the "body" css selector
 
-;convert events on footer section nodes into core.async channels.
-;put the :twitter/section-name into the channel when the node's "tap" event is triggered
-(def channels (for [section-button-node (:node/children (infamous/get-node-by-id "footer"))]
-                (events->chan section-button-node "tap" (fn [] (:twitter/section-name section-button-node)))))
-(go
-  (while true
-    (let [[section-name channel] (alts! channels)]
-      (switch-on section-name))))
