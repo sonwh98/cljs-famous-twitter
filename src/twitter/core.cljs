@@ -9,10 +9,6 @@
 (defonce ABSOLUTE (.. Size -ABSOLUTE))
 (defonce DEFAULT (.. Size -RELATIVE))
 
-(def sections [{:name "Home" :tweet-number 6}
-
-               ])
-
 (def scene-graph {:node/id       "twitterus"
                   :node/children [{:node/id            "header"
                                    :node/size-mode     [DEFAULT ABSOLUTE]
@@ -21,28 +17,24 @@
                                                          :fontSize       "30px"
                                                          :lineHeight     "100px"
                                                          :classes        ["header"]
-                                                         :content        "Login"}]}
-                                  {:node/id                "swapper"
-                                   :node/differential-size [nil -200 nil]
-                                   :node/position          [0 100]
-                                   :node/components        [{:component/type :DOMElement}]
-                                   :node/children          [{:node/id         "section-Home"
-                                                             :node/align      [0 0 0]
-                                                             :node/components [{:component/type :DOMElement
-                                                                                :overflow-y     "scroll"
-                                                                                :overflow-x     "hidden"}
-                                                                               {:component/type :Align}]
-                                                             :node/children   [{:node/size-mode     [DEFAULT ABSOLUTE]
-                                                                                :node/absolute-size [nil 100]
-                                                                                :node/position      [0 100]
-                                                                                :node/components    [{:component/type  :DOMElement
-                                                                                                      :backgroundColor (str "#" (.toString (rand-int 16rFFFFFF) 16))
-                                                                                                      :boxingSize      "border-box"
-                                                                                                      :lineHeight      "100px"
-                                                                                                      :borderBottom    "1px solid black"
-                                                                                                      :font-size       "12px"
-                                                                                                      :content         (str "Login" )}]
-                                                                                }]}]}
+                                                         :content        "Authentication"}]}
+                                  {:node/id          "login-form"
+                                   :node/align       [0 0.1]
+                                   :node/components  [{:component/type :DOMElement
+                                                       :overflow-y     "hidden"
+                                                       :overflow-x     "hidden"}
+                                                      {:component/type :Align}]
+                                   :node/children    [{:node/size-mode     [DEFAULT ABSOLUTE]
+                                                       :node/absolute-size [nil 100]
+                                                       :node/position      [0 100]
+                                                       :node/components    [{:component/type  :DOMElement
+                                                                             :backgroundColor (str "#" (.toString (rand-int 16rFFFFFF) 16))
+                                                                             :boxingSize      "border-box"
+                                                                             :lineHeight      "100px"
+                                                                             :borderBottom    "1px solid black"
+                                                                             :font-size       "12px"
+                                                                             :content         (str "Login")}]
+                                                       }]}
                                   ]})
 
 
