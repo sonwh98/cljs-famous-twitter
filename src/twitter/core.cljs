@@ -2,6 +2,8 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [com.kaicode.infamous :as infamous :refer [events->chan famous]]
             [clojure.string :as s]
+            [datascript :as d]
+            [reagent.core :as reagent]
             [cljs.core.async :as ca :refer [alts! put! chan]]))
 
 (enable-console-print!)
@@ -45,9 +47,7 @@
                                                       :node/components  [{:component/type :DOMElement
                                                                           :borderBottom   "1px solid black"
                                                                           :font-size      "12px"
-                                                                          :content        "<input id='email' type='text' />"}]
-                                                      }
-
+                                                                          :id             "email"}]}
 
                                                      {:node/size-mode   [RENDER_SIZE RENDER_SIZE]
                                                       :node/align       [0.5 .15]
@@ -94,7 +94,7 @@
      c)))
 
 (def login-clicks (events->chan2 (infamous/get-node-by-id "login-button") "click" #(identity "login")))
-(def email (atom ""))
+
 (def email-channel (events->chan2 (infamous/get-node-by-id "email-node") "keydown" (fn [event payload]
                                                                                      (let [shift-key (.. payload -shiftKey)
                                                                                            key-code (.. payload -keyCode)
@@ -102,18 +102,27 @@
                                                                                            key (if shift-key
                                                                                                  key
                                                                                                  (s/lower-case key))]
-                                                                                       
-                                                                                     key)
-                                                                                   )))
 
+                                                                                       key)
+                                                                                     )))
+(defn get-email-form-atom []
+  (->> (d/q '[:find ?e :where [?e :form/email _]] @infamous/conn) ffirst (d/entity @infamous/conn) :form/email) )
 
-(go (while true
-      (<! login-clicks)
-      (println "email=" @email)
-      (reset! email "")))
+(defn domready [handler]
+  (.addEventListener js/window "DOMContentLoaded" handler))
 
+(domready (fn []
+            (go (while true
+                  (<! login-clicks)
+                  (println "email=" @(get-email-form-atom))
+                  (reset! (get-email-form-atom) "")))
 
-(go (while true
-      (let [char (<! email-channel)]
-        (swap! email (fn [old-val]
-                       (str old-val char))))))
+            (go (while true
+                  (let [char (<! email-channel)]
+                    (swap! (get-email-form-atom) (fn [old-val]
+                                                   (str old-val char))))))
+
+            (let [email-atom (reagent/atom "") 
+                  tf (fn [] [:input {:type "text" :value @email-atom :on-change (fn [] )}])]
+              (infamous/save {:form/email email-atom})
+              (reagent/render [tf] (.. js/document (getElementById "email"))))))
