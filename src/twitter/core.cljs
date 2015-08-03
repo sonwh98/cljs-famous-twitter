@@ -1,7 +1,8 @@
 (ns ^:figwheel-always twitter.core
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [com.kaicode.infamous :as infamous :refer [events->chan famous]]
-            [cljs.core.async :refer [alts!]]))
+            [clojure.string :as s]
+            [cljs.core.async :as ca :refer [alts! put! chan]]))
 
 (enable-console-print!)
 
@@ -33,10 +34,12 @@
                                                                           :boxingSize     "border-box"
                                                                           :borderBottom   "1px solid black"
                                                                           :font-size      "20px"
-                                                                          :content        "Email"}]
+                                                                          :content        "Email"}
+                                                                         ]
                                                       }
 
-                                                     {:node/size-mode   [RENDER_SIZE RENDER_SIZE]
+                                                     {:node/id          "email-node"
+                                                      :node/size-mode   [RENDER_SIZE RENDER_SIZE]
                                                       :node/align       [0.5 0.1]
                                                       :node/mount-point [0 0]
                                                       :node/components  [{:component/type :DOMElement
@@ -76,11 +79,41 @@
 
 (infamous/render-scene-graph scene-graph "body")
 
-(def login-clicks (events->chan (infamous/get-node-by-id "login-button") "tap" #(identity "login")))
+(defn events->chan2
+  ([node event-type func] (events->chan2 node event-type (chan) func))
+  ([node event-type c func]
+   (let [famous-node (if (map? node)
+                       (:node/famous-node node)
+                       node)
+         on-recieve (clj->js {:onReceive (fn [event payload]
+                                           (let [v (func event payload)]
+                                             (if v
+                                               (put! c v))))})]
+     (.. famous-node (addUIEvent event-type))
+     (.. famous-node (addComponent on-recieve))
+     c)))
+
+(def login-clicks (events->chan2 (infamous/get-node-by-id "login-button") "click" #(identity "login")))
+(def email (atom ""))
+(def email-channel (events->chan2 (infamous/get-node-by-id "email-node") "keydown" (fn [event payload]
+                                                                                     (let [shift-key (.. payload -shiftKey)
+                                                                                           key-code (.. payload -keyCode)
+                                                                                           key (.. js/String (fromCharCode key-code))
+                                                                                           key (if shift-key
+                                                                                                 key
+                                                                                                 (s/lower-case key))]
+                                                                                       
+                                                                                     key)
+                                                                                   )))
+
 
 (go (while true
-      (println (<! login-clicks))
-      (let [email (.. js/document (getElementById "email") -value)
-            password (.. js/document (getElementById "password") -value)]
-        (println email " password=" password))
-      ))
+      (<! login-clicks)
+      (println "email=" @email)
+      (reset! email "")))
+
+
+(go (while true
+      (let [char (<! email-channel)]
+        (swap! email (fn [old-val]
+                       (str old-val char))))))
